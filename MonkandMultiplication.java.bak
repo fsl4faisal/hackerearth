@@ -1,0 +1,100 @@
+/*
+The Monk learned about priority queues recently and asked his teacher for an interesting problem. So his teacher came up with a simple problem. He now has an integer array A. For each index i, he wants to find the product of the largest, second largest and the third largest integer in the range [1,i].
+Note: Two numbers can be the same value-wise but they should be distinct index-wise.
+
+Input:
+The first line contains an integer N, denoting the number of elements in the array A.
+The next line contains N space separated integers, each denoting the ith integer of the array A.
+
+Output:
+Print the answer for each index in each line. If there is no second largest or third largest number in the array A upto that index, then print "-1", without the quotes.
+
+Constraints:
+1 <= N <= 100000
+0 <= A[i] <= 1000000
+*/
+
+
+import java.util.*;
+
+class MonkandMultiplication {
+
+	class Heap{
+		int[] arr=new int[4];
+		int min=Integer.MIN_VALUE;
+
+	}
+	
+    public static void main(String args[] ) throws Exception {
+        Scanner scan = new Scanner(System.in);
+        int N = scan.nextInt();
+
+        int[] arr=new int[N];
+        for(int i=0;i<N;i++)
+        	arr[i]=scan.nextInt();
+
+        int[] result=new int[N];
+
+        for(int i=0;i<N;i++){
+        	if(i==0 || i==1)
+        		result[i]=-1;
+        	else{
+        		result[i]=getProductMax(arr,i+1);
+        	}
+        }
+
+        display(result);
+    }
+
+    public static void display(int[] arr){
+
+    	for(int i=0;i<arr.length;i++)
+    		System.out.println(arr[i]+" ");
+    	
+    }
+
+    public static int getProductMax(int[] arr,int N){
+    	int[] heap=new int[N];
+
+    	for(int i=0;i<N;i++)
+    		heap[i]=arr[i];
+
+    	for(int i=heap.length;i>=0;i--)
+    		heapify(heap,heap.length,i);
+    
+    	return removeMax(heap,N)*removeMax(heap,N-1)*removeMax(heap,N-2);
+    }
+
+    public static int removeMax(int[] arr,int N){
+    	int max=arr[0];
+    	swap(arr,0,N-1);
+    	heapify(arr,N-1,0);
+    	
+    	return max;
+
+    }
+
+    public static void heapify(int[] arr,int N,int i){
+    	int largest=i;
+    	int left=2*i+1;
+    	int right=2*i+2;
+
+    	if(left<N && arr[left]>arr[largest])
+    		largest=left;
+    	if(right<N && arr[right]>arr[largest])
+    		largest=right;
+    	if(largest!=i){
+    		swap(arr,i,largest);
+    		heapify(arr,N,largest);
+    	}
+    }
+
+    public static void swap(int[] arr,int i,int j){
+    	int temp=arr[i];
+    	arr[i]=arr[j];
+    	arr[j]=temp;
+    }
+
+
+
+}
